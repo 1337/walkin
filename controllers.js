@@ -5,7 +5,7 @@
   app = angular.module('walkin.controllers', ['geolocation']);
 
   app.controller('MainCtrl', [
-    $scope(OpenData(geolocation(function($scope, OpenData, geolocation) {
+    '$scope', 'OpenData', 'geolocation', function($scope, OpenData, geolocation) {
       $scope.buildings = [];
       return OpenData.getBuildings().then(function(resp) {
         var map;
@@ -14,15 +14,17 @@
         L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OSM'
         }).addTo(map);
-        return angular.forEach($scope.buildings, function(building) {
+        angular.forEach($scope.buildings, function(building) {
           if (!(building.latitude && building.longitude)) {
             return;
           }
-          map.setView([building.latitude, building.longitude], 18);
           return L.marker([building.latitude, building.longitude]).addTo(map).bindPopup("" + building.building_code + " (" + building.building_name + ")");
         });
+        return geolocation.getLocation().then(function(data) {
+          return map.setView([data.coords.latitude, data.coords.longitude], 18);
+        });
       });
-    })))
+    }
   ]);
 
 }).call(this);
