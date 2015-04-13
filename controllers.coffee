@@ -7,7 +7,8 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
     $scope.building = {}
     $scope.buildings = []
     $scope.courses = []
-    $scope.subject = 'MATH'
+    $scope.subject = 'CHEM'
+    $scope.subjects = []
 
 
     initMap = ->
@@ -38,6 +39,11 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
                     showCourseList(building.building_code)
 
 
+    changeSubject = (subject) ->
+        $scope.subject = subject
+        showCourseList(buildings[0]?.building_code)
+
+
     # Given the building code (string)
     showCourseList = (buildingCode) ->
         $scope.buildingCode = buildingCode
@@ -58,7 +64,6 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
             centerMap(buildings?[0].latitude, buildings?[0].longitude)
             # Find classes in the closest building
             showCourseList(buildings?[0].building_code)
-
 
     init()
     # Zoom map into where you are

@@ -128,6 +128,7 @@ app.service 'OpenData', ['$http', '$q', ($http, $q) ->
     return {
         getBuildings: getBuildings
         getCoursesAtBuilding: getCoursesAtBuilding
+        getSubjects: getSubjects
         getSubjectSchedule: getSubjectSchedule
     }
 ]

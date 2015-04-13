@@ -6,12 +6,13 @@
 
   app.controller('MainCtrl', [
     '$scope', 'OpenData', 'geolocation', function($scope, OpenData, geolocation) {
-      var centerMap, init, initMap, map, pinBuildings, showCourseList;
+      var centerMap, changeSubject, init, initMap, map, pinBuildings, showCourseList;
       map = L.map('map');
       $scope.building = {};
       $scope.buildings = [];
       $scope.courses = [];
-      $scope.subject = 'MATH';
+      $scope.subject = 'CHEM';
+      $scope.subjects = [];
       initMap = function() {
         return L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
           attribution: '&copy; OSM, OpenData'
@@ -39,6 +40,11 @@
             });
           });
         });
+      };
+      changeSubject = function(subject) {
+        var _ref;
+        $scope.subject = subject;
+        return showCourseList((_ref = buildings[0]) != null ? _ref.building_code : void 0);
       };
       showCourseList = function(buildingCode) {
         $scope.buildingCode = buildingCode;
