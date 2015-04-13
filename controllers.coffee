@@ -4,7 +4,7 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
 
     map = L.map('map')
 
-    $scope.buildingCode = 'Loading'
+    $scope.building = {}
     $scope.buildings = []
     $scope.courses = []
     $scope.subject = 'MATH'
@@ -34,6 +34,7 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
             marker.on 'click', (e) ->
                 OpenData.getBuildings(e.latlng.lat, e.latlng.lng).then (buildings) ->
                     building = buildings[0]
+                    $scope.building = building
                     showCourseList(building.building_code)
 
 
@@ -59,13 +60,10 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
             showCourseList(buildings?[0].building_code)
 
 
+    init()
     # Zoom map into where you are
-    geolocation.getLocation().then(
-        (data) ->
+    geolocation.getLocation().then (data) ->
             [lat, lng] = [data.coords.latitude, data.coords.longitude]
             console.debug "User location: ", [lat, lng]
             init(lat, lng)
-        , ->
-            init()
-    )
 ]

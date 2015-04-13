@@ -8,7 +8,7 @@
     '$scope', 'OpenData', 'geolocation', function($scope, OpenData, geolocation) {
       var centerMap, init, initMap, map, pinBuildings, showCourseList;
       map = L.map('map');
-      $scope.buildingCode = 'Loading';
+      $scope.building = {};
       $scope.buildings = [];
       $scope.courses = [];
       $scope.subject = 'MATH';
@@ -34,6 +34,7 @@
           return marker.on('click', function(e) {
             return OpenData.getBuildings(e.latlng.lat, e.latlng.lng).then(function(buildings) {
               building = buildings[0];
+              $scope.building = building;
               return showCourseList(building.building_code);
             });
           });
@@ -60,13 +61,12 @@
           return showCourseList(buildings != null ? buildings[0].building_code : void 0);
         });
       };
+      init();
       return geolocation.getLocation().then(function(data) {
         var lat, lng, _ref;
         _ref = [data.coords.latitude, data.coords.longitude], lat = _ref[0], lng = _ref[1];
         console.debug("User location: ", [lat, lng]);
         return init(lat, lng);
-      }, function() {
-        return init();
       });
     }
   ]);
