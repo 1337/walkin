@@ -44,23 +44,28 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
             $scope.courses = courses
 
 
-    # Zoom map into where you are
-    geolocation.getLocation().then (data) ->
+    # Start the app.
+    # lat and lng are starting coords, defaulting to main campus.
+    init = (lat=43.472285, lng=-80.544858) ->
         initMap()
-
-        [lat, lng] = [data.coords.latitude, data.coords.longitude]
-
-        console.debug "User location: ", [lat, lng]
 
         OpenData.getBuildings(lat, lng).then (buildings) ->
             $scope.buildings = buildings
-
             # Add buildings to map
             pinBuildings(buildings)
-
             # Zoom map into the closest building
             centerMap(buildings?[0].latitude, buildings?[0].longitude)
-
             # Find classes in the closest building
             showCourseList(buildings?[0].building_code)
+
+
+    # Zoom map into where you are
+    geolocation.getLocation().then(
+        (data) ->
+            [lat, lng] = [data.coords.latitude, data.coords.longitude]
+            console.debug "User location: ", [lat, lng]
+            init(lat, lng)
+        , ->
+            init()
+    )
 ]

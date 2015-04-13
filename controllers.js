@@ -6,7 +6,7 @@
 
   app.controller('MainCtrl', [
     '$scope', 'OpenData', 'geolocation', function($scope, OpenData, geolocation) {
-      var centerMap, initMap, map, pinBuildings, showCourseList;
+      var centerMap, init, initMap, map, pinBuildings, showCourseList;
       map = L.map('map');
       $scope.buildingCode = 'Loading';
       $scope.buildings = [];
@@ -45,17 +45,28 @@
           return $scope.courses = courses;
         });
       };
-      return geolocation.getLocation().then(function(data) {
-        var lat, lng, _ref;
+      init = function(lat, lng) {
+        if (lat == null) {
+          lat = 43.472285;
+        }
+        if (lng == null) {
+          lng = -80.544858;
+        }
         initMap();
-        _ref = [data.coords.latitude, data.coords.longitude], lat = _ref[0], lng = _ref[1];
-        console.debug("User location: ", [lat, lng]);
         return OpenData.getBuildings(lat, lng).then(function(buildings) {
           $scope.buildings = buildings;
           pinBuildings(buildings);
           centerMap(buildings != null ? buildings[0].latitude : void 0, buildings != null ? buildings[0].longitude : void 0);
           return showCourseList(buildings != null ? buildings[0].building_code : void 0);
         });
+      };
+      return geolocation.getLocation().then(function(data) {
+        var lat, lng, _ref;
+        _ref = [data.coords.latitude, data.coords.longitude], lat = _ref[0], lng = _ref[1];
+        console.debug("User location: ", [lat, lng]);
+        return init(lat, lng);
+      }, function() {
+        return init();
       });
     }
   ]);
