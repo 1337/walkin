@@ -6,13 +6,125 @@
 
   app.service('OpenData', [
     '$http', '$q', function($http, $q) {
-      var apiKey, endpoint;
+      var apiKey, buildUrl, buildings, currentTerm, endpoint, getBuildings, getCoursesAtBuilding, getCurrentTerm, getDistance, getSubjectSchedule, getSubjects, getTerms, metaRemoved;
       apiKey = 'bac9d3d9f2742a7aa63d94b640f37ef5';
       endpoint = 'https://api.uwaterloo.ca/v2/';
-      return {
-        getBuildings: function() {
-          return $http.get("" + endpoint + "buildings/list.json?key=" + apiKey);
+      buildings = [];
+      currentTerm = null;
+      buildUrl = _.memoize(function(resource) {
+        return "" + endpoint + resource + ".json?key=" + apiKey;
+      });
+      metaRemoved = function(resource) {
+        var deferred;
+        deferred = $q.defer();
+        $http.get(buildUrl(resource)).then(function(resp) {
+          return deferred.resolve(resp.data.data);
+        });
+        return deferred.promise;
+      };
+      getBuildings = _.memoize(function(lat, lng) {
+        var deferred;
+        if (lat == null) {
+          lat = 43.47207511;
         }
+        if (lng == null) {
+          lng = -80.54394739;
+        }
+        console.debug("Getting buildings near " + lat + ", " + lng + " ...");
+        deferred = $q.defer();
+        metaRemoved('buildings/list').then(function(buildings) {
+          var output;
+          output = _.sortBy(buildings, function(building) {
+            return getDistance([lat, lng], [building.latitude, building.longitude]);
+          });
+          console.debug("Buildings by distance: ", _.pluck(output, 'building_code'));
+          return deferred.resolve(output);
+        });
+        return deferred.promise;
+      });
+      getDistance = function(latLng1, latLng2) {
+        var R, dLat, dLng, lat1, lat2, lon1, lon2;
+        lat1 = latLng1[0], lon1 = latLng1[1];
+        lat2 = latLng2[0], lon2 = latLng2[1];
+        if (typeof lat1 === 'string') {
+          lat1 = parseFloat(lat1);
+        }
+        if (typeof lat2 === 'string') {
+          lat2 = parseFloat(lat2);
+        }
+        if (typeof lon1 === 'string') {
+          lon1 = parseFloat(lon1);
+        }
+        if (typeof lon2 === 'string') {
+          lon2 = parseFloat(lon2);
+        }
+        R = 6371000;
+        if (!_.all(lat1, lat2, lon1, lon2)) {
+          console.debug("Skipping calc");
+          return R;
+        }
+        dLat = Math.abs(lat1 - lat2);
+        dLng = Math.abs(lon1 - lon2);
+        return Math.sqrt(Math.pow(dLat, 2) + Math.pow(dLng, 2));
+      };
+      getTerms = function() {
+        return metaRemoved('terms/list');
+      };
+      getCurrentTerm = _.memoize(function() {
+        var deferred;
+        deferred = $q.defer();
+        if (currentTerm) {
+          deferred.resolve(currentTerm);
+        } else {
+          getTerms().then(function(data) {
+            currentTerm = data.current_term;
+            return deferred.resolve(currentTerm);
+          });
+        }
+        return deferred.promise;
+      });
+      getSubjects = function() {
+        return metaRemoved('codes/subjects');
+      };
+      getSubjectSchedule = function(subject) {
+        var deferred;
+        deferred = $q.defer();
+        getCurrentTerm().then(function(term) {
+          return metaRemoved("terms/" + term + "/" + subject + "/schedule").then(function(data) {
+            return deferred.resolve(data);
+          });
+        });
+        return deferred.promise;
+      };
+      getCoursesAtBuilding = function(subject, buildingCode) {
+        var courses, deferred;
+        console.debug("Finding courses at " + buildingCode + ".");
+        deferred = $q.defer();
+        courses = [];
+        getSubjectSchedule(subject).then(function(courses_) {
+          var class_, classes_, course, uniqueCourses, _i, _j, _len, _len1, _ref;
+          for (_i = 0, _len = courses_.length; _i < _len; _i++) {
+            course = courses_[_i];
+            classes_ = course.classes;
+            if (!(classes_ != null ? classes_.length : void 0)) {
+              continue;
+            }
+            for (_j = 0, _len1 = classes_.length; _j < _len1; _j++) {
+              class_ = classes_[_j];
+              if ((class_ != null ? (_ref = class_.location) != null ? _ref.building : void 0 : void 0) === buildingCode) {
+                courses.push(course);
+              }
+            }
+          }
+          uniqueCourses = _.uniq(courses, false);
+          return deferred.resolve(uniqueCourses);
+        });
+        return deferred.promise;
+      };
+      return {
+        getBuildings: getBuildings,
+        getCoursesAtBuilding: getCoursesAtBuilding,
+        getSubjectSchedule: getSubjectSchedule
       };
     }
   ]);

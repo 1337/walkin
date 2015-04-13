@@ -17,6 +17,22 @@
 <body ng-app="walkin">
     <div ng-controller="MainCtrl">
         <div id="map"></div>
+        <div class="courseList">
+            <div style="padding: 10px">
+                <h1 ng-bind="buildingCode"></h1>
+                <ul>
+                    <li ng-repeat="course in courses" class="course">
+                        <div class="name">
+                            <span ng-bind="course.subject"></span>
+                            <span ng-bind="course.catalog_number"></span>
+                        </div>
+                        <div class="title">
+                            <span ng-bind="course.title"></span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 </body>
 </html>

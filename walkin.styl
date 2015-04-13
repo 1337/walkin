@@ -1,11 +1,44 @@
+mapHeight = 300px
+
+*
+    text-rendering: optimizeLegibility
+
 html, body
     margin: 0
     padding: 0
+
+body
+    background: #f6f6f6
+    font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 #map
     position: fixed
 
     left: 0
     top: 0
-    height: 100%
+    height: mapHeight
     width: 100%
+
+.courseList
+    position: fixed
+
+    left: 0
+    top: mapHeight
+    bottom: 0
+    width: 100%
+    overflow-y: scroll
+
+    ul
+        padding: 0
+
+    .course
+        margin-bottom: 12px
+        list-style: none
+
+    .name
+        font-size: 1.2em
+        color: #444
+
+    .title
+        color: #666
+        font-size: 0.8em
