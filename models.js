@@ -124,6 +124,7 @@
       return {
         getBuildings: getBuildings,
         getCoursesAtBuilding: getCoursesAtBuilding,
+        getSubjects: getSubjects,
         getSubjectSchedule: getSubjectSchedule
       };
     }

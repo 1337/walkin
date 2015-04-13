@@ -7,7 +7,8 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
     $scope.buildingCode = 'Loading'
     $scope.buildings = []
     $scope.courses = []
-    $scope.subject = 'MATH'
+    $scope.subject = 'CHEM'
+    $scope.subjects = []
 
 
     initMap = ->
@@ -35,6 +36,11 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
                 OpenData.getBuildings(e.latlng.lat, e.latlng.lng).then (buildings) ->
                     building = buildings[0]
                     showCourseList(building.building_code)
+
+
+    changeSubject = (subject) ->
+        $scope.subject = subject
+        showCourseList(buildings[0]?.building_code)
 
 
     # Given the building code (string)
