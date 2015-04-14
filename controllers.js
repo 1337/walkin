@@ -6,7 +6,7 @@
 
   app.controller('MainCtrl', [
     '$scope', 'OpenData', 'geolocation', function($scope, OpenData, geolocation) {
-      var centerMap, changeSubject, init, initMap, map, pinBuildings, showCourseList;
+      var centerMap, init, initMap, map, pinBuildings, showCourseList;
       map = L.map('map');
       $scope.building = {};
       $scope.buildings = [];
@@ -34,17 +34,19 @@
           marker.addTo(map);
           return marker.on('click', function(e) {
             return OpenData.getBuildings(e.latlng.lat, e.latlng.lng).then(function(buildings) {
-              building = buildings[0];
-              $scope.building = building;
-              return showCourseList(building.building_code);
+              $scope.buildings = buildings;
+              return $scope.changeBuilding($scope.buildings[0]);
             });
           });
         });
       };
-      changeSubject = function(subject) {
-        var _ref;
+      $scope.changeBuilding = function(building) {
+        $scope.building = building;
+        return showCourseList($scope.building.building_code);
+      };
+      $scope.changeSubject = function(subject) {
         $scope.subject = subject;
-        return showCourseList((_ref = buildings[0]) != null ? _ref.building_code : void 0);
+        return showCourseList($scope.building.building_code);
       };
       showCourseList = function(buildingCode) {
         $scope.buildingCode = buildingCode;
@@ -60,11 +62,14 @@
           lng = -80.544858;
         }
         initMap();
+        OpenData.getSubjects().then(function(subjects) {
+          return $scope.subjects = subjects;
+        });
         return OpenData.getBuildings(lat, lng).then(function(buildings) {
           $scope.buildings = buildings;
+          $scope.changeBuilding(buildings[0]);
           pinBuildings(buildings);
-          centerMap(buildings != null ? buildings[0].latitude : void 0, buildings != null ? buildings[0].longitude : void 0);
-          return showCourseList(buildings != null ? buildings[0].building_code : void 0);
+          return centerMap(buildings != null ? buildings[0].latitude : void 0, buildings != null ? buildings[0].longitude : void 0);
         });
       };
       init();

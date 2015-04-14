@@ -1,7 +1,8 @@
-mapHeight = 300px
+mapHeight = 30%
 
 *
     text-rendering: optimizeLegibility
+    box-sizing: border-box
 
 html, body
     margin: 0
@@ -19,6 +20,15 @@ body
     height: mapHeight
     width: 100%
 
+.menu
+    background: #15a287
+    font-size: 30px
+    text-align: center
+
+    select
+        width: 100%
+        margin: 0
+
 .courseList
     position: fixed
 
@@ -27,6 +37,12 @@ body
     bottom: 0
     width: 100%
     overflow-y: scroll
+
+    >div
+        // Cannot pad a fixed div
+        padding: 15px
+        >div
+            padding: 15px 0
 
     ul
         padding: 0

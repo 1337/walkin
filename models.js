@@ -37,7 +37,6 @@
           output = _.sortBy(buildings, function(building) {
             return getDistance([lat, lng], [building.latitude, building.longitude]);
           });
-          console.debug("Buildings by distance: ", _.pluck(output, 'building_code'));
           return deferred.resolve(output);
         });
         return deferred.promise;

@@ -32,22 +32,49 @@
     <div ng-controller="MainCtrl">
         <div id="map"></div>
         <div class="courseList">
-            <div style="padding: 10px">
-                <h1 ng-bind="building.building_code">Loading</h1>
-                <div ng-if="!courses.length">
-                    No {{ subject }} courses here.
+            <div>
+                <div class="row menu">
+                    <div class="col-sm-6">
+                        <select ng-model="subject"
+                                ng-change="changeSubject(subject)"
+                                ng-options="subject.subject as subject.subject + ' (' + subject.description + ')' for subject in subjects">
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <select ng-model="building"
+                                ng-change="changeBuilding(building)"
+                                ng-options="building as building.building_code for building in buildings">
+                        </select>
+                    </div>
                 </div>
-                <ul>
-                    <li ng-repeat="course in courses" class="course">
-                        <div class="name">
-                            <span ng-bind="course.subject"></span>
-                            <span ng-bind="course.catalog_number"></span>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div ng-if="!courses.length">
+                            No {{ subject }} courses here.
                         </div>
-                        <div class="title">
-                            <span ng-bind="course.title"></span>
-                        </div>
-                    </li>
-                </ul>
+                        <ul>
+                            <li ng-repeat="course in courses" class="course">
+                                <div class="name">
+                                    <span ng-bind="course.subject"></span>
+                                    <span ng-bind="course.catalog_number"></span>
+                                    <span ng-bind="course.section"></span>
+                                </div>
+                                <div class="title">
+                                    <span ng-bind="course.title"></span>
+                                    <div ng-if="course.classes">
+                                        <div>Classes: </div>
+                                        <ul>
+                                            <li ng-repeat="class_ in course.classes">
+                                                {{ class_.date.weekdays }} |
+                                                {{ class_.instructors[0] }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -35,7 +35,7 @@ app.service 'OpenData', ['$http', '$q', ($http, $q) ->
             output = _.sortBy buildings, (building) ->
                 getDistance([lat, lng], [building.latitude, building.longitude])
 
-            console.debug "Buildings by distance: ", _.pluck(output, 'building_code')
+            # console.debug "Buildings by distance: ", _.pluck(output, 'building_code')
             deferred.resolve output
 
         return deferred.promise

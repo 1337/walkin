@@ -34,14 +34,18 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
 
             marker.on 'click', (e) ->
                 OpenData.getBuildings(e.latlng.lat, e.latlng.lng).then (buildings) ->
-                    building = buildings[0]
-                    $scope.building = building
-                    showCourseList(building.building_code)
+                    $scope.buildings = buildings
+                    $scope.changeBuilding($scope.buildings[0])
 
 
-    changeSubject = (subject) ->
+    $scope.changeBuilding = (building) ->
+        $scope.building = building
+        showCourseList($scope.building.building_code)
+
+
+    $scope.changeSubject = (subject) ->
         $scope.subject = subject
-        showCourseList(buildings[0]?.building_code)
+        showCourseList($scope.building.building_code)
 
 
     # Given the building code (string)
@@ -56,14 +60,18 @@ app.controller 'MainCtrl', ['$scope', 'OpenData', 'geolocation', ($scope, OpenDa
     init = (lat=43.472285, lng=-80.544858) ->
         initMap()
 
+        OpenData.getSubjects().then (subjects) ->
+            $scope.subjects = subjects
+
         OpenData.getBuildings(lat, lng).then (buildings) ->
             $scope.buildings = buildings
+            # Find classes in the closest building
+            $scope.changeBuilding(buildings[0])
+
             # Add buildings to map
             pinBuildings(buildings)
             # Zoom map into the closest building
             centerMap(buildings?[0].latitude, buildings?[0].longitude)
-            # Find classes in the closest building
-            showCourseList(buildings?[0].building_code)
 
     init()
     # Zoom map into where you are
