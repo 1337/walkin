@@ -1,0 +1,26 @@
+{
+  "name": "walkin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/1337/walkin",
+  "authors": [
+    "Brian Lai <b2lai@uwaterloo.ca>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "lib/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-material": "~1.0.1",
+    "font-awesome": "~4.5.0",
+    "angular-leaflet-directive": "~0.10.0",
+    "normalize.css": "~3.0.3",
+    "lodash": "~3.10.1",
+    "angularjs-geolocation": "~0.1.1",
+    "ui-router": "~0.2.15"
+  }
+}

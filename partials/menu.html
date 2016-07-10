@@ -1,0 +1,28 @@
+<md-toolbar md-scroll-shrink>
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Menu"
+                   ng-click="openSideNav()">
+            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        </md-button>
+        <h2 class="md-flex">Walkin</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Menu">
+            <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+    <md-toolbar class="md-theme-indigo">
+        <h1 class="md-toolbar-tools">&nbsp;</h1>
+    </md-toolbar>
+    <md-content>
+        <md-list>
+            <md-list-item ui-sref="/">
+                <p>Classes</p>
+            </md-list-item>
+            <md-list-item ui-sref="/settings">
+                <p>Settings</p>
+            </md-list-item>
+        </md-list>
+    </md-content>
+</md-sidenav>

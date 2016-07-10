@@ -1,0 +1,57 @@
+<md-content flex layout-padding>
+    <div layout="row">
+        <md-input-container>
+            <label>Subject</label>
+            <md-select ng-model="subject"
+                       ng-change="changeSubject(subject)">
+                <md-option ng-repeat="subject in subjects"
+                           value="{{ subject }}">
+                    {{ subject.subject }} + ({{ subject.description }})
+                </md-option>
+            </md-select>
+        </md-input-container>
+        <md-input-container>
+            <label>Building</label>
+            <md-select ng-model="building"
+                       ng-change="changeBuilding(building)">
+                <md-option ng-repeat="building in buildings"
+                           value="{{ building }}">
+                    {{ building.building_code }}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div id="map"></div>
+    <div class="courseList">
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-if="!courses.length">
+                    No {{ subject }} courses here.
+                </div>
+                <ul>
+                    <li ng-repeat="course in courses" class="course">
+                        <div class="name">
+                            <span ng-bind="course.subject"></span>
+                            <span ng-bind="course.catalog_number"></span>
+                            <span ng-bind="course.section"></span>
+                        </div>
+                        <div class="title">
+                            <span ng-bind="course.title"></span>
+
+                            <div ng-if="course.classes">
+                                <div>Classes:</div>
+                                <ul>
+                                    <li ng-repeat="class_ in course.classes">
+                                        {{ class_.date.weekdays }} |
+                                        {{ class_.instructors[0] }}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</md-content>
